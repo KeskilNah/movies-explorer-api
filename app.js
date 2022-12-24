@@ -16,6 +16,8 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
 });
+const DB = process.env.NODE_ENV === 'production' ? process.env.DB : 'mongodb://localhost:27017/moviesdb';
+
 const app = express();
 // const allowedOrigins = [
 //   '*',
@@ -24,7 +26,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/mestodb');
+mongoose.connect(DB, {
+  useNewUrlParser: true,
+});
 
 app.use(helmet());
 app.use(requestLogger);
@@ -44,7 +48,7 @@ app.get('/crash-test', () => {
 });
 
 app.use(routes);
-
+console.log(process.env.NODE_ENV, process.env.DB, DB);
 app.use(errorLogger);
 
 app.use(errors());

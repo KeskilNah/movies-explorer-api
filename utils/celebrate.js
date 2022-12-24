@@ -15,32 +15,23 @@ module.exports.updateUserCelebrate = celebrate({
   }),
 });
 
-module.exports.updateAvatarCelebrate = celebrate({
+module.exports.createMovieCelebrate = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().regex(urlPattern),
+    country: Joi.string().required(),
+    director: Joi.string().required(),
+    duration: Joi.number().required(),
+    year: Joi.string().required(),
+    description: Joi.string().required(),
+    image: Joi.string().required().regex(urlPattern),
+    trailerLink: Joi.string().required().regex(urlPattern),
+    nameRU: Joi.string().required(),
+    nameEN: Joi.string().required(),
+    thumbnail: Joi.string().required().regex(urlPattern),
+    movieId: Joi.string().required(),
   }),
 });
 
-module.exports.createCardCelebrate = celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().regex(urlPattern),
-  }),
-});
-
-module.exports.deleteCardCelebrate = celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string().length(24).hex().required(),
-  }),
-});
-
-module.exports.likeCardCelebrate = celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string().length(24).hex().required(),
-  }),
-});
-
-module.exports.dislikeCardCelebrate = celebrate({
+module.exports.deleteMovieCelebrate = celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().length(24).hex().required(),
   }),
@@ -48,6 +39,7 @@ module.exports.dislikeCardCelebrate = celebrate({
 
 module.exports.loginCelebrate = celebrate({
   body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
@@ -56,8 +48,6 @@ module.exports.loginCelebrate = celebrate({
 module.exports.createUserCelebrate = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(urlPattern),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
