@@ -9,15 +9,9 @@ const {
   BAD_DATA_MESSAGE,
   SUCCESS_CREATION_CODE,
   CAST_ERROR_MESSAGE,
+  NOT_FOUND_USER_MESSAGE,
+  EMAIL_EXIST_ERROR_MESSAGE,
 } = require('../utils/constants');
-
-module.exports.getUsers = (req, res, next) => {
-  User.find({})
-    .then((users) => {
-      res.send({ data: users });
-    })
-    .catch(next);
-};
 
 module.exports.createUser = (req, res, next) => {
   const {
@@ -34,7 +28,7 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ExistEmailError('Такой email уже зарегистрирован'));
+        next(new ExistEmailError(EMAIL_EXIST_ERROR_MESSAGE));
       } else if (err.name === 'ValidationError') {
         next(new BadRequestError(BAD_DATA_MESSAGE));
       } else {
@@ -44,18 +38,20 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.updateUser = (req, res, next) => {
-  const { name, about } = req.body;
+  const { name, email } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
-    { name, about },
+    { name, email },
     { new: true, runValidators: true },
-  ).orFail(new NotFoundError('Пользователь не найден'))
+  ).orFail(new NotFoundError(NOT_FOUND_USER_MESSAGE))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(BAD_DATA_MESSAGE));
       } else if (err.name === 'CastError') {
         next(new BadRequestError(CAST_ERROR_MESSAGE));
+      } else if (err.code === 11000) {
+        next(new ExistEmailError(EMAIL_EXIST_ERROR_MESSAGE));
       } else {
         next(err);
       }
@@ -74,7 +70,7 @@ module.exports.login = (req, res, next) => {
 module.exports.userInfo = (req, res, next) => {
   User.findById(
     req.user._id,
-  ).orFail(new NotFoundError('Пользователь не найден'))
+  ).orFail(new NotFoundError(NOT_FOUND_USER_MESSAGE))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -83,4 +79,9 @@ module.exports.userInfo = (req, res, next) => {
         next(err);
       }
     });
+};
+
+module.exports.logout = (req, res) => {
+  res.clearCookie('jwt');
+  return res.end();
 };

@@ -5,18 +5,14 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-
-const routes = require('./routes/index');
+const { limiter } = require('./middlewares/limiter');
+const routes = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
-const DB = process.env.NODE_ENV === 'production' ? process.env.DB : 'mongodb://localhost:27017/moviesdb';
+
+const DB = process.env.NODE_ENV === 'production' ? process.env.DB : 'mongodb://localhost:27017/bitfilmsdb';
 
 const app = express();
 // const allowedOrigins = [
@@ -48,7 +44,7 @@ app.get('/crash-test', () => {
 });
 
 app.use(routes);
-console.log(process.env.NODE_ENV, process.env.DB, DB);
+
 app.use(errorLogger);
 
 app.use(errors());
