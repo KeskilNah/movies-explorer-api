@@ -1,6 +1,6 @@
 const Movie = require('../models/movie');
 const {
-  SUCCESS_DATA_CODE, BAD_DATA_MESSAGE,
+  SUCCESS_DATA_CODE, BAD_DATA_MESSAGE, OBJECT_DELETED_MESSAGE, OBJECT_NOT_FOUND_MESSAGE,
 } = require('../utils/constants');
 
 const ForbiddenError = require('../errors/ForbiddenError');
@@ -54,11 +54,11 @@ module.exports.createMovie = (req, res, next) => {
 module.exports.deleteMovie = (req, res, next) => {
   const ownerId = req.user._id;
   Movie.findById(req.params.movieId)
-    .orFail(new NotFoundError(`Объект с id ${req.params.movieId} не найден`))
+    .orFail(new NotFoundError(OBJECT_NOT_FOUND_MESSAGE))
     .then((movie) => {
       if (movie.owner._id.toString() === ownerId) {
         movie.delete()
-          .then(() => res.status(SUCCESS_DATA_CODE).json({ message: `Объект с id ${req.params.movieId} удалён` }))
+          .then(() => res.status(SUCCESS_DATA_CODE).json({ message: OBJECT_DELETED_MESSAGE }))
           .catch(next);
       } else {
         throw new ForbiddenError('Это чужой объект');

@@ -9,6 +9,10 @@ const SERVER_ERROR_MESSAGE = 'Ошибка по умолчанию';
 const CAST_ERROR_MESSAGE = 'Id юзера не валидный';
 const NOT_FOUND_USER_MESSAGE = 'Пользователь не найден';
 const EMAIL_EXIST_ERROR_MESSAGE = 'Такой email уже зарегистрирован';
+const OBJECT_DELETED_MESSAGE = 'Объект успешно удалён';
+const OBJECT_NOT_FOUND_MESSAGE = 'Объект с данным ID не найден';
+
+const DB_DEV = 'mongodb://localhost:27017/bitfilmsdb';
 
 const urlPattern = /^(?:(?:https?|HTTPS?):\/\/)(www\.)?(\w|\W){1,}(\.[a-z]{2,6})((\w|\W){1,})?(#$)?/;
 
@@ -24,5 +28,8 @@ module.exports = {
   CAST_ERROR_MESSAGE,
   NOT_FOUND_USER_MESSAGE,
   EMAIL_EXIST_ERROR_MESSAGE,
+  OBJECT_DELETED_MESSAGE,
+  OBJECT_NOT_FOUND_MESSAGE,
   urlPattern,
+  DB_DEV,
 };

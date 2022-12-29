@@ -21,7 +21,7 @@ module.exports.createMovieCelebrate = celebrate({
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
     thumbnail: Joi.string().required().regex(urlPattern),
-    movieId: Joi.string().required(),
+    movieId: Joi.number().required(),
   }),
 });
 
@@ -40,7 +40,7 @@ module.exports.loginCelebrate = celebrate({
 
 module.exports.createUserCelebrate = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30).required(),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
