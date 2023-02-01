@@ -74,7 +74,7 @@ module.exports.userInfo = (req, res, next) => {
   User.findById(
     req.user._id,
   ).orFail(new NotFoundError(NOT_FOUND_USER_MESSAGE))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError(CAST_ERROR_MESSAGE));
